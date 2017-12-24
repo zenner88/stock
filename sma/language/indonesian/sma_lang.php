@@ -24,6 +24,7 @@ $lang['inventories']			 		= "Persediaan";
 $lang['new_inventory'] 					= "Persediaan Baru";
 $lang['new_purchase'] 					= "Pembelian Baru";
 $lang['sales'] 							= "Penjualan";
+$lang['voucher'] 				        = "Voucher";
 $lang['new_invoice'] 					= "Invoice Baru";
 $lang['new_sale'] 						= "Penjualan Baru";
 $lang['admin_task'] 					= "Tugas Admin";

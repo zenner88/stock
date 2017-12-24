@@ -351,17 +351,14 @@ class Pos_model extends CI_Model
 
 	}
 
-	public function getProductByCf2ID($cf2) 
+	public function getProductByCf2ID($cf2, $quantity) 
 	{
-
-		$q = $this->db->get_where('products', array('id' => $cf2), 1); 
-		  if( $q->num_rows() > 0 )
-		  {
-			return $q->row();
-		  } 
-		
-		  return FALSE;
-
+		$this->db->where('id',$cf2);
+		$query = $this->db->get_where('products');
+		$data = $query->result_array();
+		$qty = $data[0]['quantity'] - $quantity;
+		$id_produk= $data[0]['id'];
+		$this->db->update('products', array('quantity' => $qty), array('id' => $id_produk));
 	}
 
 	public function getProductByCf3ID($cf3) 
@@ -802,6 +799,7 @@ class Pos_model extends CI_Model
 			'user'					=> $saleDetails['user'],
 			'paid_by'				=> $saleDetails['paid_by'],
 			'count'					=> $saleDetails['count'],
+			'voucher'				=> $saleDetails['voucher'],
                         'pos'                           => '1',
                         'paid'				=> $saleDetails['paid_val'],
 			'cc_no'				=> $saleDetails['cc_no_val'],
@@ -848,9 +846,11 @@ class Pos_model extends CI_Model
 	
 	public function nsQTY($product_id, $quantity) {
 		
-		$pr1 = $this ->getProductByCf1ID($product_id);
+		
 		$cariIdKeProduk = $this->getProductByWareHouse($product_id);
+		$pr1 = $this->getProductByCf2ID($cariIdKeProduk->id, $quantity);
 		$cariIdKeWareHouse = $this ->getProductToWareHouse($cariIdKeProduk->id);
+		
 		foreach($cariIdKeWareHouse as $row) {
 			$id_produk= $row['product_id'];
 			$warehouse_id= $row['warehouse_id'];
@@ -861,6 +861,7 @@ class Pos_model extends CI_Model
 				// print_r($warehouse_id);
 				// die();
 				$this->db->update('warehouses_products', array('quantity' => $kurang1), array('product_id' => $id_produk,'warehouse_id' => $warehouse_id));
+				
 				return true;
 				
 			} else if ($warehouse_id == '2') {
@@ -873,28 +874,15 @@ class Pos_model extends CI_Model
 			}
 			
 		}
+		/*$qty = $pr1[0]['quantity'] - $quantity;
+		$id_produk= $pr1[0]['id'];
+		print_r($qty);
+		$this->db->update('products', array('quantity' => $qty), array('id' => $id_produk));*/
 		
-		foreach($pr1 as $row) {
-			//echo $row['field'];
-			
-			$idBahan= $row['idBahanBaku'];
-			$prD1 = $this->getProductByID1($idBahan);
-			$prDuk = $this->getProductByID1($product_id);
-			$prD = $this->getProductByID($prD1->id);
-			$pengurangan=$row['qty']*$quantity;
-			$cf1QTY =$prD->quantity - ($row['qty'] *$quantity) ;
-			$cf2QTY =$prDuk->quantity - $quantity ;
-			$cf3QTY =$prD1->quantity - ($row['qty'] *$quantity) ;
-			$this->db->update('warehouses_products', array('quantity' => $cf1QTY), array('product_id' => $prD1->id));
-			$this->db->update('products', array('quantity' => $cf2QTY), array('code' => $prDuk->code));
-			$this->db->update('products', array('quantity' => $cf3QTY), array('id' => $prD1->id));
-			$logPengurangan = array(
-				'idProduk' => $idBahan,
-				'namaTransaksi'			=> "Pengurangan Data Produk (Penjualan)",
-				'qty' => $pengurangan
-			);
-			$this->db->insert('log', $logPengurangan);
-}
+		
+		
+		
+
 
 
 		

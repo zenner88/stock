@@ -83,15 +83,17 @@ h3 { margin: 5px 0; }
     </tr>
     <tr>
     <?php if($inv->total_tax != 0 && TAX1) { ?>
-    <td style="text-align:left;"><?php echo $this->lang->line("product_tax"); ?></td><td style="text-align:right; padding-right:1.5%; border-right: 1px solid #999;font-weight:bold;"><?php echo $this->ion_auth->formatMoney($inv->total_tax); ?></td>
-    <?php } else { echo '<td></td>'; } ?>
+    <td style="text-align:center;"><?php echo $this->lang->line("product_tax"); ?></td><td style="text-align:right; padding-right:1.5%; border-right: 1px solid #999;font-weight:bold;"><?php echo $this->ion_auth->formatMoney($inv->total_tax); ?></td>
+    
+    <?php } else { } ?>
     <?php if($inv->total_tax2 != 0 && TAX2) { ?>
-    <td style="text-align:left; padding-left:1.5%;"><?php echo $this->lang->line("invoice_tax"); ?></td><td style="text-align:right;font-weight:bold;"><?php echo $this->ion_auth->formatMoney($inv->total_tax2); ?></td>
+    <td colspan="2" style="text-align:center;"><?php echo $this->lang->line("invoice_tax"); ?></td><td style="text-align:right;font-weight:bold;"><?php echo $this->ion_auth->formatMoney($inv->total_tax2); ?></td>
     <?php } else { echo '<td></td>'; } ?>
     </tr>
     <?php if($inv->inv_discount != 0 && DISCOUNT_OPTION) { ?><tr>
-    <td colspan="2" style="text-align:left;"><?php echo $this->lang->line("discount"); ?></td><td colspan="2" style="text-align:right;font-weight:bold;"><?php echo $this->ion_auth->formatMoney($inv->inv_discount); ?></td>
+    <td style="text-align:center;"><?php echo $this->lang->line("discount"); ?></td><td colspan="2" style="text-align:right;font-weight:bold;"><?php echo $this->ion_auth->formatMoney($inv->inv_discount); ?></td>
     </tr><?php } ?>
+    <tr><td colspan="2" style="text-align:center;"><?php echo $this->lang->line("voucher"); ?></td><td style="text-align:right;font-weight:bold;"><?php echo $this->ion_auth->formatMoney($inv->voucher); ?></td></tr>
     <tr>
     <td colspan="2" style="text-align:left; font-weight:bold; border-top:1px solid #000; padding-top:10px;"><?php echo $this->lang->line("total_payable"); ?></td><td colspan="2" style="border-top:1px solid #000; padding-top:10px; text-align:right; font-weight:bold;"><?php echo $this->ion_auth->formatMoney($inv->total); ?></td>
     </tr>

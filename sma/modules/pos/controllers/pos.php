@@ -74,6 +74,7 @@ class Pos extends MX_Controller {
 		$sl = "serial";
 		$dis = "discount";
 		$status = "status_print";
+		$voucher = "voucher";
 			
 		if ($this->form_validation->run() == true)
 		{
@@ -105,6 +106,9 @@ class Pos extends MX_Controller {
 			$inv_total_no_tax = 0;
 
 				for($i=1; $i<=500; $i++){
+					$harga_voucher = $this->input->post($voucher.$i);
+					$val_voucher[] = $harga_voucher;
+					$total_voucher = array_sum($val_voucher);
 					if( $this->input->post($quantity.$i) && $this->input->post($product.$i) && $this->input->post($unit_price.$i) ) {
 						$product_details = $this->pos_model->getProductByCode($this->input->post($product.$i));
 						if(RESTRICT_SALE) {	
@@ -273,7 +277,7 @@ class Pos extends MX_Controller {
 				$inv_discount = 0;
 			}
 			
-			$gTotal = $inv_total_no_tax + $total_tax + $val_tax2 - $val_discount;
+			$gTotal = $inv_total_no_tax + $total_tax + $val_tax2 - $val_discount - $total_voucher;
 			
 			$saleDetails = array('reference_no' => $reference_no,
 					'date' => $date,
@@ -291,7 +295,8 @@ class Pos extends MX_Controller {
 					'user'	=> USER_NAME,
 					'paid_by' => $paid_by,
 					'count' => $count,
-                                        'paid_val' => $this->input->post('paid_val'),
+					'voucher' => $total_voucher,
+                    'paid_val' => $this->input->post('paid_val'),
 					'cc_no_val' => $this->input->post('cc_no_val'),
 					'cc_holder_val' => $this->input->post('cc_holder_val'),
 					'cheque_no_val' => $this->input->post('cheque_no_val'),

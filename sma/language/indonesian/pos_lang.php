@@ -24,6 +24,7 @@ $lang['default_biller'] 			= "Penagih Standar";
 $lang['pos_settings'] 				= "Pengaturan POS";
 $lang['barcode_scanner'] 			= "Scanner Barcode";
 $lang['x'] 							= "X";
+$lang['voucher'] 				    = "Voucher";
 $lang['qty'] 						= "Jml";
 $lang['total_items'] 				= "Jumlah Barang";
 $lang['total_payable'] 				= "Jumlah Pembayaran";

@@ -195,8 +195,14 @@ echo $this->lang->line("date") . " " . date(PHP_DATE, strtotime('today'));
                                             <td style="text-align:right; padding-right:10px; font-weight:bold;" colspan="2"><span id="ds">0.00</span></td>
                                         </tr>
                                         <tr>
+                                            <td style="padding-left:10px; text-align:left; " colspan="2"><?php echo $this->lang->line('voucher'); ?></td>
+                                            <td style="text-align:right; padding-right:10px; font-weight:bold;" colspan="2"><span id="vouch">0.00</span></td>
+                                        </tr>
+                                        <tr>
                                             <td style="padding: 5px 0px 5px 10px; text-align:left; border-top: 1px solid #666; font-weight:bold; background:#333; color:#FFF;" colspan="2"><?php echo $this->lang->line('total_payable'); ?></td>
-                                            <td style="text-align:right; padding:5px 10px 5px 0px; font-size: 14px;border-top: 1px solid #666; font-weight:bold; background:#333; color:#FFF;" colspan="2"><span id="total-payable">0.00</span></td>
+                                            <td style="text-align:right; padding:5px 10px 5px 0px; font-size: 14px;border-top: 1px solid #666; font-weight:bold; background:#333; color:#FFF;" colspan="2"><span id="total-payable">0.00</span>
+                                            <input type="hidden" name="total_pay" id="total_pay" value="">
+                                            </td>
                                         </tr>
                                     </table>
                                 </div>
@@ -294,6 +300,10 @@ echo "</div><button id=\"previous\" type=\"button\" class=\"blue\" style='z-inde
                             </div>
                         </div>
 <?php } ?>
+                        <div class="control-group">
+                            <label class="control-label" for="voucher"><?php echo $this->lang->line("voucher"); ?></label>
+                            <div class="controls"> <?php echo form_input('voucher', '', 'id="item_voucher" '); ?> </div>
+                        </div>
 <?php if (PRODUCT_SERIAL) { ?>
                         <div class="control-group">
                             <label class="control-label" for="serial_no"><?php echo $this->lang->line("serial_no"); ?></label>
@@ -666,6 +676,9 @@ echo "</div><button id=\"previous\" type=\"button\" class=\"blue\" style='z-inde
                     var rw_no = $('#itemRowId').val();
                     old_val = $('#tax_rate-' + rw_no).val();
                     old_ds = $('#discount-' + rw_no).val();
+                    voucher_row = $('#item_voucher').val();
+                    total_voucher = $('#voucher-' + rw_no).val(voucher_row);
+                    total_vouch = $('#voucher-' + rw_no).val();
 <?php if (PRODUCT_SERIAL) { ?> $('#serial-' + rw_no).val($('#item_serial_no').val()); <?php } ?>
 <?php if (TAX1) { ?> $('#tax_rate-' + rw_no).val($('#item_tax').val()); <?php } ?>
 <?php if (DISCOUNT_OPTION == 2) { ?>
@@ -749,13 +762,18 @@ echo "</div><button id=\"previous\" type=\"button\" class=\"blue\" style='z-inde
                         total_discount -= old_pr_discount;
                         total_discount += new_pr_discount;
                         current_discount = Math.abs(total_discount).toFixed(2);
-                        var g_total = (total + tax_value + tax_value2) - total_discount;
+                        harga_voucher = Math.abs(total_vouch).toFixed(2);
+                        var g_total = parseInt(total) + parseInt(tax_value) + (tax_value2) - parseInt(total_discount) - parseInt(total_vouch);
 <?php } else { ?>
-                        var g_total = total + tax_value + tax_value2;
+                        var g_total = parseInt(total) + parseInt(tax_value) + parseInt(tax_value2) - parseInt(total_vouch);
 <?php } ?>
                     grand_total = Math.abs(g_total).toFixed(2);
+                    console.log(harga_voucher);
+                    $("#vouch").empty();
+                    $("#vouch").append(harga_voucher);
                     $("#total-payable").empty();
                     $("#total-payable").append(grand_total);
+                    $("#total_pay").val(grand_total);
 <?php if (PRODUCT_SERIAL) { ?>$('#item_serial_no').val('');<?php } ?>
 <?php if (TAX1) { ?>$("#tax").empty();
                                 $("#tax").append(current_tax);
@@ -1024,7 +1042,7 @@ echo "</div><button id=\"previous\" type=\"button\" class=\"blue\" style='z-inde
                                          var pt = prod_tax ? prod_tax : DT;
                                          var newTr = $('<tr id="row_' + count + last + '" class="'+ wow +'"></tr>');
                                          var xx = "satu";
-                                         newTr.html('<td id="'+ xx +'" style="text-align:center; width: 27px;"><button type="button" class="del_row" id="del-' + count + last + '" value="' + item_price + '"><i class="icon-trash"></i></button></td><td ><input type="hidden" name="product' + count + '" value="' + prod_code + '" id="product-' + count + last + '"><input type="hidden" name="serial' + count + '" value="" id="serial-' + count + last + '"><input type="hidden" name="tax_rate' + count + '" value="' + pt + '" id="tax_rate-' + count + last + '"><input type="hidden" name="discount' + count + '" value="<?php echo DEFAULT_DISCOUNT; ?>" id="discount-' + count + last + '"><a href="#" id="model-' + count + last + '" class="code">' + prod_name + '</a><input type="hidden" name="price' + count + '" value="' + parseFloat(item_price).toFixed(2) + '" id="oprice-' + count + last + '"></td><td style="text-align:center;"><input class="keyboard" onClick="this.select();" name="quantity' + count + '" type="text" value="1" autocomplete="off" id="quantity-' + count + last + '"></td><td style="padding-right: 10px; text-align:right;"><input type="text" class="price" name="unit_price' + count + '" value="' + parseFloat(item_price).toFixed(2) + '" id="price-' + count + last + '"></td>');
+                                         newTr.html('<td id="'+ xx +'" style="text-align:center; width: 27px;"><button type="button" class="del_row" id="del-' + count + last + '" value="' + item_price + '"><i class="icon-trash"></i></button></td><td ><input type="hidden" name="product' + count + '" value="' + prod_code + '" id="product-' + count + last + '"><input type="hidden" name="serial' + count + '" value="" id="serial-' + count + last + '"><input type="hidden" name="voucher' + count + '" value="" id="voucher-' + count + last + '"><input type="hidden" name="tax_rate' + count + '" value="' + pt + '" id="tax_rate-' + count + last + '"><input type="hidden" name="discount' + count + '" value="<?php echo DEFAULT_DISCOUNT; ?>" id="discount-' + count + last + '"><a href="#" id="model-' + count + last + '" class="code">' + prod_name + '</a><input type="hidden" name="price' + count + '" value="' + parseFloat(item_price).toFixed(2) + '" id="oprice-' + count + last + '"></td><td style="text-align:center;"><input class="keyboard" onClick="this.select();" name="quantity' + count + '" type="text" value="1" autocomplete="off" id="quantity-' + count + last + '"></td><td style="padding-right: 10px; text-align:right;"><input type="text" class="price" name="unit_price' + count + '" value="' + parseFloat(item_price).toFixed(2) + '" id="price-' + count + last + '"></td>');
                                         //  <td style="text-align:center; width:30px;"><input name="stat' + count + '" id="'+ xx +'" type="text" value="1" ></td>
 
                                          newTr.appendTo("#saletbl");
@@ -1495,7 +1513,7 @@ echo "</div><button id=\"previous\" type=\"button\" class=\"blue\" style='z-inde
                                  
                                  $("#payment").click(function() {
 
-                                     var twt = (total + tax_value + tax_value2) - total_discount;
+                                     var twt = $('#total_pay').val();
                                      count = count - 1;
                                      if (isNaN(twt) || twt == 0) {
                                          bootbox.alert('<?php echo $this->lang->line('x_total'); ?>');

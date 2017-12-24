@@ -76,7 +76,7 @@ class Products extends MX_Controller {
  
 	   $this->load->library('datatables');
 	   $this->datatables
-			->select("products.id as productid, products.image as image, products.code as code, products.name as name, categories.name as cname, products.cost, products.price, COALESCE(warehouses_products.quantity, 0) as quantity, products.unit, alert_quantity", FALSE)
+			->select("products.id as productid, products.image as image, products.code as code, products.name as name, categories.name as cname, products.cost, products.price, products.quantity as quantity, products.unit, alert_quantity", FALSE)
 			->from('products')
 			//rubah disini
 			->join('categories', 'products.category_id=categories.id', 'LEFT')
@@ -98,7 +98,7 @@ class Products extends MX_Controller {
  
 	   $this->load->library('datatables');
 	   $this->datatables
-			->select("products.id as productid, products.image as image, products.code as code, products.name as name, categories.name as cname, products.price, COALESCE(quantity, 0) as quantity, products.unit, alert_quantity", FALSE);
+			->select("products.id as productid, products.image as image, products.code as code, products.name as name, categories.name as cname, products.price, products.quantity as quantity, products.unit, alert_quantity", FALSE);
 			$this->datatables->from('products');
 			$this->datatables->join('categories', 'products.category_id=categories.id', 'left');			
 			$this->datatables->group_by("products.id");
