@@ -479,6 +479,7 @@ echo "</div><button id=\"previous\" type=\"button\" class=\"blue\" style='z-inde
                 var discounts = <?php echo json_encode($discounts); ?>;
                 var DT = <?php echo DEFAULT_TAX; ?>;
                 var pr_tax;
+                var quantity;
                 <?php if (DISCOUNT_OPTION == 1) { ?>
                     var discount = <?php echo $discount_rate; ?>;
                     var discount_type = <?php echo $discount_type; ?>;
@@ -529,6 +530,7 @@ echo "</div><button id=\"previous\" type=\"button\" class=\"blue\" style='z-inde
                                 data: {category_id: cat_id, per_page: 'n'},
                                 dataType: "html",
                                 success: function(data) {
+                                    console.log(data);
                                     $('#proajax').empty();
                                     var newPrs = $('<div></div>');
                                     newPrs.html(data);
@@ -990,10 +992,13 @@ echo "</div><button id=\"previous\" type=\"button\" class=\"blue\" style='z-inde
                                              data: {code: v},
                                              dataType: "json",
                                              success: function(data) {
+                                                 //console.log(data);
                                                  item_price = parseFloat(data.price);
                                                  prod_name = data.name.replace(/"/g, "&#034;").replace(/'/g, "&#039;");
                                                  prod_code = data.code;
                                                  pr_tax = data.tax_rate;
+                                                 //quantity = data.quantity;
+                                                 
                                              }
                                          });
                                          var leng = $(this).attr('id').length;
@@ -1023,6 +1028,12 @@ echo "</div><button id=\"previous\" type=\"button\" class=\"blue\" style='z-inde
                                         //  <td style="text-align:center; width:30px;"><input name="stat' + count + '" id="'+ xx +'" type="text" value="1" ></td>
 
                                          newTr.appendTo("#saletbl");
+                                         // if (quantity == "0") {
+                                         //    bootbox.alert('Quantity 0');
+                                         // } else {
+                                            
+                                         // }
+                                         
 
                                          total += item_price;
                                          current = parseFloat(total).toFixed(2);

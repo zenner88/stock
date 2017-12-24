@@ -487,8 +487,9 @@ class Pos extends MX_Controller {
 		  $product_tax = $products->tax_rate;
 			
                     $tax_rate = $this->pos_model->getTaxRateByID($product_tax);
+          $quantity = $products->quantity;
                         
-		   $data = array('price'=> $price, 'name' => $name, 'code' => $code, 'tax_rate' => $tax_rate);
+		   $data = array('price'=> $price, 'name' => $name, 'code' => $code, 'tax_rate' => $tax_rate, 'quantity' => $quantity);
 		   echo json_encode($data);
 		   
    }
