@@ -762,13 +762,15 @@ echo "</div><button id=\"previous\" type=\"button\" class=\"blue\" style='z-inde
                         total_discount -= old_pr_discount;
                         total_discount += new_pr_discount;
                         current_discount = Math.abs(total_discount).toFixed(2);
-                        harga_voucher = Math.abs(total_vouch).toFixed(2);
+                        if (total_vouch == "") {
+                            total_vouch = 0
+                        }
                         var g_total = parseInt(total) + parseInt(tax_value) + (tax_value2) - parseInt(total_discount) - parseInt(total_vouch);
 <?php } else { ?>
                         var g_total = parseInt(total) + parseInt(tax_value) + parseInt(tax_value2) - parseInt(total_vouch);
 <?php } ?>
                     grand_total = Math.abs(g_total).toFixed(2);
-                    console.log(harga_voucher);
+                    harga_voucher = Math.abs(total_vouch).toFixed(2);
                     $("#vouch").empty();
                     $("#vouch").append(harga_voucher);
                     $("#total-payable").empty();
@@ -784,6 +786,7 @@ echo "</div><button id=\"previous\" type=\"button\" class=\"blue\" style='z-inde
 
                             $(this).text('<?php echo $this->lang->line('save'); ?>');
                             $('#itemModal').modal('hide');
+                            $('#item_voucher').val('');
                             return false;
                         });
 
